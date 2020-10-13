@@ -13,9 +13,9 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 algorithms = ['GBTClassifier', 'LogisticRegression', 'RandomForestClassifier', 'LinearSVC']
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-a', '--algorithm', list = algorithms, default = 0, type = int, help = 'index of algorithm in the list')
+ap.add_argument('-a', '--algorithm', choices = algorithms, default = 0, type = int, help = 'index of algorithm in the list')
 ap.add_argument('-n', '--app-name', default = 'pyspark_app', type = str, help = 'name of the app')
-
+ap.add_argument('-f', '--num-features', default = 100000, type = int, help = '# of the features of hashing tf')
 args = ap.parse_args()
 
 @contextmanager
@@ -26,8 +26,8 @@ def timer():
   print(f'Elapsed time: {end - start: .4f}s')
 
 
-algorithm = algorithms[ap.algorithm]
-spark = SparkSession.builder.appName(ap.app_name).getOrCreate()
+algorithm = algorithms[args.algorithm]
+spark = SparkSession.builder.appName(args.app_name).getOrCreate()
 
 with timer():
   print('[INFO] Reading time')
@@ -35,7 +35,7 @@ with timer():
   rdd.cache()
 
 tokenizer = Tokenizer(inputCol = 'rawContent', outputCol = 'words')
-hashing_tf = HashingTF(numFeatures = 100000, inputCol = 'words', outputCol = 'rawFeatures')
+hashing_tf = HashingTF(numFeatures = args.num_features, inputCol = 'words', outputCol = 'rawFeatures')
 idf = IDF(inputCol = 'rawFeatures', outputCol = 'features')
 label_indexer = StringIndexer(inputCol = 'rawLabel', outputCol = 'label')
 
@@ -92,6 +92,6 @@ with timer():
     test_df = test_df.withColumnRenamed('scaled_features', 'features')
   preds = classifier.transform(test_df)
   acc = evaluator.evaluate(preds)
-  print(f'[RESULT] Accuracy of training set: {acc:. 4f}')
+  print(f'[RESULT] Accuracy of test set: {acc:.4f}')
   print('[INFO] Evaluating test set')
 

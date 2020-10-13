@@ -1,0 +1,7 @@
+platform, algorithm, preprocessing_time, training_time, inference_time, training_accuracy, test_time, test_accuracy
+Google Colab, Logistic Regression,720.8903,1722.2448,0.0777,0.9157,36.2729,0.9012
+Google Colab, Gradient Boost,373.7023,NaN,NaN,NaN,NaN,NaN
+Google Colab, Random Forest,425.5012,NaN,NaN,NaN,NaN,NaN
+Google Colab, SVM,648.3156,2539.5291,0.0561,0.9178,33.0559,0.9009
+Dell-7577, Logistic Regression,206.2175,509.3671,0.0499,0.9157,13.3434,0.9012
+Dell-7591, Logistic Regression,155.7993,371.5668,0.032,0.9157,8.8595,0.9012
